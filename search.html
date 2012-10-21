@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Search Engine Library</title>
+
+  <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+  <meta name="author" content="Hakim El Hattab">
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/sky.css" id="theme">
+
+  <!-- For syntax highlighting -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+  <script>
+  document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+  </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+
+        <section>
+          <h2>Scala Search Library & NAA Search app</h3>
+          </section>
+
+          <section>
+            <h2>Project motivations</h2>
+            <p>To implement a search library, comparable to Lucene. </p>
+            <strong>and</strong>
+            <p>Use it in something semi-useful</p>
+          </section>
+
+          <section>
+            <h2>Scala Search Library</h2>
+            <ul>
+              <li>
+                Written in Scala, <strong>100% from scratch</strong>. No dependencies here folks.
+              </li>
+              <li>
+                Generic. Can be used to search on word-based documents of almost <strong>any</strong> type.
+              </li>
+              <li>
+                Uses the techniques we learnt in class: Inverted indexing, vector space models, cosine similarity, stemming etc
+              </li>
+              <li>
+                <strong>90% accuracy</strong> when compare to Apache Lucene Project.
+              </li>
+            </ul>
+          </section>
+          <section>
+            <section>
+              <h2>How it's used?</h2>
+              <p>To start with we need to define a document. A document implementation, only needs one field:</p>
+
+  <pre><code>abstract class Document {
+    val words: List[String]
+  }
+  </code></pre>
+              <p>And a example document implementation:</p>
+  <pre><code>class NationalArchiveDocument(
+    val name: List[String],
+    val contents: String,
+    val year: Int) extends Document(title)
+  </code></pre>
+            </section>
+
+            <section>
+              <h2>Instantiation</h2>
+              <p>Once a document type is defined, now just instantiate the library:</p>
+              <pre><code>val searchManager = new SearchManager[NationalArchiveDocument]
+
+  for (d < documents) {
+    searchManager.addToIndex(d)
+  }</code></pre>
+              <p>And start querying!</p>
+              <pre><code>searchManager.query("something interesting")</code></pre>
+            </section>
+
+            <section>
+              <h2>Results:</h2>
+              <p>Using the query:</p>
+              <pre><code>searchManager.query("Leonardo DiCaprio Island")</code></pre>
+              <p>I might receive results like this:</p>
+              <pre><code>List(
+  (Document("Shutter Island", 2010, ...), 0.54590991), 
+  (Document("The Beach", 2000, ...),      0.20655559), 
+  (Document("Titanic", 1997, ...),        0.01087605), 
+  (Document("Titanic 3D", 2012, ...),     0.01011605),
+  (Document("Blood Diamond", 2006, ...),  0.00354470)
+)</code></pre>
+            </section>
+          </section>
+  </div>
+
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.min.js"></script>
+
+<script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+        { src: 'lib/js/highlight.js', async: true, callback: function() { window.hljs.initHighlightingOnLoad(); } },
+        { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: 'lib/js/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: 'lib/js/data-markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+        { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+</script>
+
+</body>
+</html>
