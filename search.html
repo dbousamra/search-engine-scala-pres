@@ -13,7 +13,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <link rel="stylesheet" href="css/reveal.css">
-  <link rel="stylesheet" href="css/theme/sky.css" id="theme">
+  <link rel="stylesheet" href="css/theme/beige.css" id="theme">
+  <link rel="stylesheet" href="css/main.css" >
 
   <!-- For syntax highlighting -->
   <link rel="stylesheet" href="lib/css/zenburn.css">
@@ -36,48 +37,47 @@
       <div class="slides">
 
         <section>
-          <h2>Scala Search Library & NAA Search app</h3>
-          </section>
+          <h3>Scala Search Library & NAA Search app</h3>
+          <img src="image1.png" style="border: 0px">
+        </section>
 
-          <section>
-            <h2>Project motivations</h2>
-            <p>To implement a search library, comparable to Lucene. </p>
-            <strong>and</strong>
-            <p>Use it in something semi-useful</p>
-          </section>
+        <section>
+          <h2>Project motivations</h2>
+          <p>To implement a search library, <em>comparable</em> to Lucene. </p>
+          <strong>and</strong>
+          <p>Use it in something semi-useful</p>
+        </section>
 
-          <section>
-            <h2>Scala Search Library</h2>
-            <ul>
-              <li>
-                Written in Scala, <strong>100% from scratch</strong>. No dependencies here folks.
-              </li>
-              <li>
-                Generic. Can be used to search on word-based documents of almost <strong>any</strong> type.
-              </li>
-              <li>
-                Uses the techniques we learnt in class: Inverted indexing, vector space models, cosine similarity, stemming etc
-              </li>
-              <li>
-                <strong>90% accuracy</strong> when compare to Apache Lucene Project.
-              </li>
-            </ul>
-          </section>
+        <section>
+          <h2>Scala Search Library</h2>
+          <ul>
+            <li>
+              Written in Scala, <strong>100% from scratch</strong>. No dependencies here folks.
+            </li>
+            <li>
+              Generic. Can be used to search on word-based documents of almost <strong>any</strong> type.
+            </li>
+            <li>
+              Uses the techniques we learnt in class: Inverted indexing, vector space models, cosine similarity, stemming etc
+            </li>
+            <li>
+              <strong>90% accuracy</strong> when compare to Apache Lucene Project.
+            </li>
+          </ul>
+        </section>
           <section>
             <section>
               <h2>How it's used?</h2>
               <p>To start with we need to define a document. A document implementation, only needs one field:</p>
 
   <pre><code>abstract class Document {
-    val words: List[String]
-  }
-  </code></pre>
+  val words: List[String]
+}</code></pre>
               <p>And a example document implementation:</p>
   <pre><code>class NationalArchiveDocument(
     val name: List[String],
     val contents: String,
-    val year: Int) extends Document(title)
-  </code></pre>
+    val year: Int) extends Document(title)</code></pre>
             </section>
 
             <section>
@@ -85,9 +85,9 @@
               <p>Once a document type is defined, now just instantiate the library:</p>
               <pre><code>val searchManager = new SearchManager[NationalArchiveDocument]
 
-  for (d < documents) {
-    searchManager.addToIndex(d)
-  }</code></pre>
+for (d <- documents) {
+  searchManager.addToIndex(d)
+}</code></pre>
               <p>And start querying!</p>
               <pre><code>searchManager.query("something interesting")</code></pre>
             </section>
@@ -104,8 +104,48 @@
   (Document("Titanic 3D", 2012, ...),     0.01011605),
   (Document("Blood Diamond", 2006, ...),  0.00354470)
 )</code></pre>
-            </section>
-          </section>
+      </section>
+    </section>
+    <section>
+      <section>
+        <h2>Evaluation strategies</h2>
+        <p>How do you evaluate search results? <em>Quantitative</em> or <em>Qualitative</em>?</p>
+        <p>Comparing to Lucene using <strong>Levenshtein</strong> distances that factor in ranking:</p>
+        <ul class="dog">
+          <li>Treats Lucene as end-goal</li>
+          <li>Repeatable and large test coverage</li>
+          <li>Can create <em>categories</em> of test cases</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Example</h2>
+        
+        <p>For a given query Q, we receive two result sets. Treat Lucene as the optimal case, and compare.</p>
+        <pre><code>val luceneResults = [Doc1, Doc2, Doc3, Doc4, Doc5]</code></pre>
+        <pre><code>val mySearchLibResults = [Doc1, Doc2, Doc3, Doc5, Doc4]</code></pre>
+        <p>Using a modified Levenshtein distance algorithm, we can compute the difference between the two:</p>
+        <pre><code>levenshtein(luceneResults, mySearchLibResults) == 0.883333</code></pre>
+      </section>
+    </section>
+    <section>
+        <section>
+          <h2>The good</h2>
+          <ul>
+            <li>Easy to understand and use</li>
+            <li>Uses concepts we learnt in this subject</li>
+            <li>Good accuracy on certain queries when compared with Lucene</li>
+            <li>Generic on document type</li>
+          </ul>
+        </section>
+        <section>
+          <h2>The bad</h2>
+          <ul>
+            <li>Somewhat inefficient: Stored in-memory, vector space model seems inefficient for many terms</li>
+            <li>Query parsing is limited to <strong>OR</strong> inclusion. <strong>AND</strong> as a default might be better</li>
+            <li>Lucene exists</li>
+          </ul>
+        </section>
+      </section>
   </div>
 
 </div>
